@@ -1,0 +1,264 @@
+set nocompatible
+filetype off
+"set rtp+=~/.vim/autoload/plug.vim
+call plug#begin('~/.vim/plugged')
+Plug 'octol/vim-cpp-enhanced-highlight'
+Plug 'Yggdroot/indentLine'
+"Plug 'thaerkh/vim-workspace'
+"Plug 'wellle/visual-split.vim'
+"Plug 'mattboehm/vim-accordion'
+"Plug 'xolox/vim-notes'
+"Plug 'xolox/vim-misc'
+Plug 'scrooloose/nerdcommenter'
+Plug 'scrooloose/nerdtree'
+Plug 'jiangmiao/auto-pairs'
+"Plug 'Chiel92/vim-autoformat'
+"Plug 'hdima/python-syntax'
+"Plug 'scrooloose/syntastic'
+Plug 'townk/vim-autoclose'
+Plug 'itchyny/lightline.vim'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
+Plug 'Xuyuanp/nerdtree-git-plugin'
+Plug 'junegunn/gv.vim'
+Plug 'jreybert/vimagit'
+Plug 'jistr/vim-nerdtree-tabs'
+"Plug 'tmhedberg/simplyfold'
+Plug 'thinca/vim-quickrun'
+Plug 'matze/vim-move'
+Plug 'mbbill/undotree'
+Plug 'flazz/vim-colorschemes'
+"Plug 'nathanaelkane/vim-indent-guides'
+Plug 'frazrepo/vim-rainbow'
+Plug 'mgee/lightline-bufferline'
+Plug 'dense-analysis/ale'
+Plug 'maximbaz/lightline-ale'
+Plug 'junegunn/fzf.vim'
+Plug 'junegunn/vim-github-dashboard'
+Plug 'tpope/vim-eunuch'
+"Plug 'tpope/vim-flagship'
+" Always load this last
+Plug 'ryanoasis/vim-devicons'
+call plug#end()
+filetype plugin on
+filetype plugin indent on
+
+set encoding=UTF-8
+scriptencoding utf-8
+setglobal fileencoding=utf-8
+
+" Use Unix as the standard file type
+set ffs=unix,dos,mac
+
+set mouse=a
+set autoread
+set cmdheight=4
+set number
+set wrap
+set textwidth=150
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set autoindent
+set smartindent
+set smarttab
+set noexpandtab
+set showmode
+set nobackup
+set noswapfile
+set nowb
+set showcmd
+set incsearch "search as characters are entered
+set hlsearch "highlight matches
+set smartcase
+set ignorecase
+set esckeys
+set foldenable "enable folding
+set ttyfast
+set scrolloff=5
+
+syntax on
+
+"colorscheme vividchalk_modified
+set background=dark
+
+set history=999
+set undolevels=999
+
+set wildmenu
+set wildmode=list:longest
+"set wildmode=longest:full,list
+"set wildignore+=*.o
+"set wildignore+=*~
+"set wildignore+=*.pyc
+"set wildignore+=tags
+"set wildignore+=*/.git/*
+"set wildignore+=*/tmp/*
+"set wildignore+=*/target/*
+"set wildignore+=*.class
+"set wildignore+=*.swp
+"set wildignore+=*.png
+"set wildignore+=*.jpg
+"set wildignore+=*.gif
+"set wildignore+=*.pdf
+
+set nomodeline
+set showmatch
+set backspace=2
+set backspace=indent,eol,start
+set laststatus=2
+set noerrorbells
+set visualbell
+set t_vb=
+set showbreak=>\
+set hidden
+
+
+if !has('gui_running')
+	set t_Co=256
+endif
+
+
+autocmd vimenter * NERDTree
+autocmd StdinReadPre * let s:std_in = 1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+
+map<F2> :NERDTreeToggle<CR>
+let g:indentLine_color_term = 255
+
+
+let g:NERDSpaceDelims = 1
+let g:NERDCompactSexyComs = 1
+let g:NERDCommentEmptyLines = 1
+let g:NERDTrimTrailingWhitespace = 1
+
+let g:nerdtree_tabs_open_on_gui_startup = 0
+let g:nerdtree_tabs_open_on_new_tab = 0
+let g:NERDTreeFileExtensionHighlightFullName = 1
+let g:NERDTreeExactMatchHighlightFullName = 1
+let g:NERDTreePatternMatchHighlightFullName = 1
+
+let g:webdevicons_enable = 1
+let g:webdevicons_enable_nerdtree = 1
+let g:WebDevIconsUnicodeDecorateFolderNodes = 1
+"let g:webdevicons_enable_flagship_statusline = 1
+let g:WebDevIconsUnicodeGlyphDoubleWidth = 1
+let g:WebDevIconsNerdTreeGitPluginForceVAlign = 1
+let g:lightline#bufferline#enable_devicons = 1
+let g:rainbow_active = 1
+
+command! W w !sudo tee % > /dev/null
+command! RemoveTrailingSpaces call CleanExtraSpaces()
+
+if has("autocmd")
+	augroup AutoCommandsGroup
+		autocmd!		
+		" Return to last edit position when opening files
+		autocmd BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+		" Clean extra spaces on txt files
+		autocmd BufWritePre *.js,*.py,*.sh :call CleanExtraSpaces()
+	augroup END
+endif
+
+fun! <SID>StripTrailingWhitespaces()
+	let l = line('.')
+	let c = col('.')
+	%s/\s\+$//e
+	call cursor(l,c)
+endfun
+
+autocmd FileType c,cpp,java,python,md,html,js,css,javascript,php autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+
+
+
+
+set statusline=%<\ %f\ %m%r%y%w%=%l\/%-6L\ %3c\
+
+function! CleanExtraSpaces()
+	let save_cursor = getpos(".")
+	let old_query = getreg('/')
+	silent! %s/\s+$//e
+	call setpos('.', save_cursor)
+	call setreg('/', old_query)
+endfunction
+
+
+if has('win32') || has('win64')
+	let g:python_host_prog = 'C:\python27\python.exe'
+	let g:python3_host_prog = 'C:\python37\python.exe'
+else
+	let g:python_host_prog = '/usr/bin/python2'
+	let g:python3_host_prog = '/usr/bin/python3'
+endif
+
+let g:ale_sign_column_always = 1
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = '[%linter%] %s [%severity%]'
+let g:ale_lint_on_text_changed = 'never'
+let g:ale_lint_on_insert_leave = 0
+let g:ale_lint_on_enter = 0
+let g:ale_list_window_size = 5
+"let g:ale_open_list = 1
+"let g:ale_keep_list_window_open = 1
+
+let g:lightline = {}
+
+let g:lightline.component_expand = {
+	\ 'linter_checking': 'lightline#ale#checking',
+	\ 'linter_infos': 'lightline#ale#infos',
+	\ 'linter_warnings': 'lightline#ale#warnings',
+	\ 'linter_errors': 'lightline#ale#errors',
+	\ 'linter_ok': 'lightline#ale#ok',
+	\ }
+
+let g:lightline.component_type = {
+	\ 'linter_checking': 'right',
+	\ 'linter_infos': 'right',
+	\ 'linter_warnings': 'warning',
+	\ 'linter_errors': 'error',
+	\ 'linter_ok': 'right',
+	\ }
+
+let g:lightline.active = { 'right': [[ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ]] }
+
+
+"let g:lightline#ale#indicator_checking = "\uf110"
+"let g:lightline#ale#indicator_infos = "\uf129"
+"let g:lightline#ale#indicator_warnings = "\uf071"
+"let g:lightline#ale#indicator_errors = "\uf05e"
+"let g:lightline#ale#indicator_ok = "\uf00c"
+
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+function! s:fzf_statusline()
+	highlight fzf1 ctermfg=161 ctermbg=251
+	highlight fzf2 ctermfg=23 ctermbg=251
+	highlight fzf3 ctermfg=237 ctermbg=251
+	setlocal statusline=%#fzf1#\ >\ %#fzf2#fz%#fzf3#f
+endfunction
+
+autocmd! User FzfStatusLine call <SID>fzf_statusline()
+
+
+
+
+"set showtabline=2
+"set guioptions-=e
+
+let g:github_dashboard = { 'username' : 'beccers2017' }
+let g:indentLine_char_list = ['|', '¦', '┆', '┊']
+
+autocmd BufNewFile,BufRead * setlocal formatoptions-=cro
+
+augroup vimrc_file_type_indentation
+	au!
+	autocmd FileType python setlocal shiftwidth=2 tabstop=2 expandtab
+	autocmd FileType vim setlocal shiftwidth=2 tabstop=2 expandtab
+	autocmd FileType sh setlocal shiftwidth=2 tabstop=2 expandtab
+	autocmd FileType c setlocal shiftwidth=4 tabstop=4 expandtab
+	autocmd FileType c++ setlocal shiftwidth=4 tabstop=4 expandtab
+	autocmd FileType java setlocal shiftwidth=4 tabstop=4 expandtab
+augroup end
