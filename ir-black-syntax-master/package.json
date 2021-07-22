@@ -1,0 +1,11 @@
+{
+  "name": "ir-black-syntax",
+  "theme": "syntax",
+  "version": "0.2.0",
+  "description": "Based on Todd Werth’s original for TextMate.",
+  "repository": "https://github.com/adamjspooner/ir-black-syntax",
+  "license": "MIT",
+  "engines": {
+    "atom": ">0.50.0"
+  }
+}

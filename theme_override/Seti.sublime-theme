@@ -1,0 +1,36 @@
+[
+{
+    "class": "puck_control",
+    "layer0.texture": "User/theme_override/scroll_puck.png",
+    "layer0.tint": [40, 170, 250],
+    "layer0.opacity": 1.0,
+    "layer1.opacity": 0.0,
+    "layer0.inner_margin": 2
+},
+{
+    "class": "puck_control",
+    "attributes": ["horizontal"],
+    "layer0.texture": "User/theme_override/scroll_puck_horiz.png",
+    "layer0.tint": [40, 170, 250],
+    "content_margin": [10,0]
+},
+{
+    "class": "sidebar_label",
+    "font.size": 13
+},
+{
+    "class": "sidebar_label",
+    "font.face": "Fira Mono"
+},
+{
+  "class": "sidebar_container",
+  "layer0.inner_margin": [0, 54, 0, 0],
+  "layer1.inner_margin": [120, 54, -120, 0],
+  "content_margin": [-8, 54, 0, 0]
+},
+{
+  "class": "sidebar_tree",
+  "indent": 10,
+  "row_padding": [8, 7]
+},
+]
